@@ -5,10 +5,14 @@ import { Users, UsersDocument } from 'src/users/schemas/items.schema';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { hash, compare } from 'bcrypt';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(Users.name) private readonly userModel: Model<UsersDocument>){}
+  constructor(
+    @InjectModel(Users.name) private readonly userModel: Model<UsersDocument>,
+    private jwtService: JwtService
+  ){}
 
   async register(userObject: RegisterAuthDto) {
     const { password } = userObject ?? {};
@@ -23,6 +27,13 @@ export class AuthService {
     
     const checkPassword = await compare(userObject.password, findUser.password);
     if(!checkPassword) throw new HttpException('Invalid credentials', 403);
-    return findUser;
+
+    const payload = { id: findUser._id };
+    const token = this.jwtService.sign(payload);
+
+    return {
+      token: token,
+      user: findUser
+    };
   }
 }

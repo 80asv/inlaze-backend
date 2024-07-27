@@ -17,7 +17,7 @@ export class LikedMoviesController {
   @Post('')
   like(@Body() movieObject: CreateLikedMovieDto, @Req() req: Request) {
     const token = req.headers['authorization']?.split(' ')[1];
-    console.log({movieObject});
+    // console.log({movieObject});
     return this.likedMoviesService.like(movieObject, token);
   }
 

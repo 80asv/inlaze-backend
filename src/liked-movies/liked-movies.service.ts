@@ -24,7 +24,7 @@ export class LikedMoviesService {
     const decodedToken = this.jwtService.verify(token);
     const userId = decodedToken.id;
     const movieWithUserId = { ...movie, userId: userId };
-    console.log({ movieWithUserId, token, decodedToken });
+    // console.log({ movieWithUserId, token, decodedToken });
     return this.likedMoviesModel.create(movieWithUserId);
   }
 

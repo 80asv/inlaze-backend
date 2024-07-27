@@ -37,4 +37,11 @@ export class AuthService {
       user: findUser
     };
   }
+
+  async getCurrentAuth(token: string) {
+    const decodedToken = this.jwtService.verify(token);
+    const userId = decodedToken.id;
+    const currentUser = await this.userModel.findById(userId);
+    return currentUser;
+  }
 }

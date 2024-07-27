@@ -15,10 +15,16 @@ export class AuthService {
   ){}
 
   async register(userObject: RegisterAuthDto) {
-    const { password } = userObject ?? {};
+    const { email, password } = userObject ?? {};
+    
+    const existingUser = await this.userModel.findOne({ email });
+    if (existingUser) {
+      throw new HttpException('This user already exists', 409);
+    }
+    
     const plainToHash = await hash(password, 10);
     userObject = { ...userObject, password: plainToHash };
-    // console.log({userObject});
+    
     return this.userModel.create(userObject);
   }
 

@@ -18,6 +18,7 @@ export class AuthService {
     const { password } = userObject ?? {};
     const plainToHash = await hash(password, 10);
     userObject = { ...userObject, password: plainToHash };
+    console.log({userObject});
     return this.userModel.create(userObject);
   }
 
